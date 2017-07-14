@@ -36,7 +36,7 @@
 -include $(TOPDIR)/Make.defs
 
 ASRCS =
-CSRCS = stm32_boot.c stm32_spi.c stm32_usbdev.c stm32_mmcsd.c
+CSRCS = stm32_boot.c stm32_bringup.c stm32_spi.c stm32_usbdev.c stm32_mmcsd.c
 
 ifeq ($(CONFIG_STM32_FSMC),y)
 CSRCS += stm32_lcd.c stm32_selectlcd.c
@@ -46,6 +46,10 @@ ifeq ($(CONFIG_ARCH_LEDS),y)
 CSRCS += stm32_autoleds.c
 else
 CSRCS += stm32_userleds.c
+endif
+
+ifeq ($(CONFIG_PWM),y)
+CSRCS += stm32_userpwm.c
 endif
 
 ifeq ($(CONFIG_ARCH_BUTTONS),y)
@@ -70,6 +74,10 @@ endif
 
 ifeq ($(CONFIG_USBDEV_COMPOSITE),y)
 CSRCS += stm32_composite.c
+endif
+
+ifeq ($(CONFIG_DEV_GPIO),y)
+CSRCS += stm32_usergpio.c
 endif
 
 include $(TOPDIR)/configs/Board.mk

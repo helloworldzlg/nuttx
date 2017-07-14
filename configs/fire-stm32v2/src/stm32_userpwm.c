@@ -1,8 +1,9 @@
 /************************************************************************************
- * configs/fire-stm32v2/src/stm32_boot.c
+ * configs/fire-stem32v2/src/bcas_pwm.c
  *
- *   Copyright (C) 2009, 2012, 2015 Gregory Nutt. All rights reserved.
+ *   Copyright (C) 2013, 2015, 2016 Gregory Nutt. All rights reserved.
  *   Author: Gregory Nutt <gnutt@nuttx.org>
+ *           Alan Carvalho de Assis <acassis@gmail.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -39,88 +40,116 @@
 
 #include <nuttx/config.h>
 
+#include <errno.h>
 #include <debug.h>
-
+#include <stdio.h>
+#include <string.h>
 #include <nuttx/board.h>
+#include <nuttx/drivers/pwm.h>
+
 #include <arch/board/board.h>
 
+#include "chip.h"
 #include "up_arch.h"
+#include "stm32_pwm.h"
 #include "fire-stm32v2.h"
 
 /************************************************************************************
  * Pre-processor Definitions
  ************************************************************************************/
+/* Configuration *******************************************************************/
+/* PWM
+ *
+ * The fire-stem32v2 has no real on-board PWM devices, but the board can be
+ * configured to output a pulse train using TIM4 CH2.  This pin is used by FSMC
+ * is connect to CN5 just for this purpose:
+ *
+ * PB0 ADC12_IN8/TIM3_CH3
+ *
+ */
 
-/************************************************************************************
- * Private Functions
- ************************************************************************************/
+#define HAVE_PWM 1
+
+#ifndef CONFIG_PWM
+#  undef HAVE_PWM
+#endif
+
+#ifndef CONFIG_STM32_TIM8
+#  undef HAVE_PWM
+#endif
+
+#ifndef CONFIG_STM32_TIM8_PWM
+#  undef HAVE_PWM
+#endif
+
+#ifndef CONFIG_STM32_TIM3
+#  undef HAVE_PWM
+#endif
+
+#ifndef CONFIG_STM32_TIM3_PWM
+#  undef HAVE_PWM
+#endif
+
+typedef enum 
+{
+	USER_TIM3_PWM = 3,
+	USER_TIM8_PWM = 8,
+}USER_TIM_E;
 
 /************************************************************************************
  * Public Functions
  ************************************************************************************/
 
 /************************************************************************************
- * Name: stm32_boardinitialize
+ * Name: stm32_pwm_setup
  *
  * Description:
- *   All STM32 architectures must provide the following entry point.  This entry point
- *   is called early in the intitialization -- after all memory has been configured
- *   and mapped but before any devices have been initialized.
+ *   Initialize PWM and register the PWM device.
  *
  ************************************************************************************/
-
-void stm32_boardinitialize(void)
+int stm32_pwm_setup(void)
 {
-  /* Configure SPI chip selects if 1) SPI is not disabled, and 2) the weak function
-   * stm32_spidev_initialize() has been brought into the link.
-   */
+#ifdef HAVE_PWM
+  static bool initialized = false;
+  struct pwm_lowerhalf_s *pwm;
+  int ret;
+  int index;
+  char dev_path[16];
+  USER_TIM_E use_pwm[] = {USER_TIM3_PWM, USER_TIM8_PWM};
+  uint32_t pwm_dev_num = sizeof(use_pwm)/sizeof(USER_TIM_E);
 
-#if defined(CONFIG_STM32_SPI1) || defined(CONFIG_STM32_SPI2)
-  if (stm32_spidev_initialize)
+  /* Have we already initialized? */
+  if (!initialized)
     {
-      stm32_spidev_initialize();
+      for (index = 0; index < pwm_dev_num; index++)
+        {            
+		  /* Call stm32_pwminitialize() to get an instance of the PWM interface */
+		  pwm = stm32_pwminitialize(use_pwm[index]);
+		  if (!pwm)
+		    {
+		      aerr("ERROR: Failed to get the STM32 PWM lower half\n");
+		      return -ENODEV;
+		    }
+
+		  /* Register the PWM driver at "/dev/pwm*" */
+		  memset(dev_path, '\0', sizeof(dev_path));
+		  sprintf(dev_path, "/dev/pwm%d", index);
+		  
+		  ret = pwm_register(dev_path, pwm);
+		  if (ret < 0)
+		    {
+		      aerr("ERROR: pwm_register failed: %d\n", ret);
+		      return ret;
+		    }
+        }
+      /* Now we are initialized */
+
+      initialized = true;
     }
-#endif
 
-  /* Initialize USB is 1) USBDEV is selected, 2) the USB controller is not
-   * disabled, and 3) the weak function stm32_usbinitialize() has been brought
-   * into the build.
-   */
-
-#if defined(CONFIG_USBDEV) && defined(CONFIG_STM32_USB)
-  if (stm32_usbinitialize)
-    {
-      stm32_usbinitialize();
-    }
-#endif
-
-  /* Configure on-board LEDs if LED support has been selected. */
-
-#ifdef CONFIG_ARCH_LEDS
-  board_autoled_initialize();
+  return OK;
+#else
+  return -ENODEV;
 #endif
 }
 
-/************************************************************************************
- * Name: board_initialize
- *
- * Description:
- *   If CONFIG_BOARD_INITIALIZE is selected, then an additional initialization call
- *   will be performed in the boot-up sequence to a function called
- *   board_initialize().  board_initialize() will be called immediately after
- *   up_initialize() is called and just before the initial application is started.
- *   This additional initialization phase may be used, for example, to initialize
- *   board-specific device drivers.
- *
- ************************************************************************************/
-
-#ifdef CONFIG_BOARD_INITIALIZE
-void board_initialize(void)
-{
-//#ifndef CONFIG_LIB_BOARDCTL
-  /* Perform board initialization here instead of from the board_app_initialize(). */
-
-  (void)stm32_bringup();
-//#endif
-}
-#endif
