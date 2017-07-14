@@ -93,7 +93,7 @@
 typedef enum 
 {
 	USER_TIM3_PWM = 3,
-	USER_TIM8_PWM = 8,
+    USER_TIM8_PWM = 8,	
 }USER_TIM_E;
 
 /************************************************************************************
@@ -115,7 +115,7 @@ int stm32_pwm_setup(void)
   int ret;
   int index;
   char dev_path[16];
-  USER_TIM_E use_pwm[] = {USER_TIM3_PWM, USER_TIM8_PWM};
+  USER_TIM_E use_pwm[] = {USER_TIM8_PWM, USER_TIM3_PWM};
   uint32_t pwm_dev_num = sizeof(use_pwm)/sizeof(USER_TIM_E);
 
   /* Have we already initialized? */

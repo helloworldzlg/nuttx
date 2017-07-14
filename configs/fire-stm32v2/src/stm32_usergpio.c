@@ -41,19 +41,19 @@ GPIO_CONFIG_DES_S g_gpio_cfg_dec[] = {
   { "PC7",  97,  GPIO_OUTPUT_PIN,     10, 0, false, false, GPIO_PORTC | GPIO_PIN7  | GPIO_OUTPUT | GPIO_CNF_OUTPP, NULL},
   
   /* left wheel encode pause input */
-  //{ "PF12", 50,  GPIO_INTERRUPT_PIN,  11, 0, GPIO_PORTF | GPIO_PIN12 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, lforward_speed_cb},
-  //{ "PF13", 53,  GPIO_INTERRUPT_PIN,  12, 0, GPIO_PORTF | GPIO_PIN13 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, lbackward_speed_cb},
+  { "PF14", 54,  GPIO_INTERRUPT_PIN,  11, 0, true, false, GPIO_PORTF | GPIO_PIN14 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, lforward_speed_cb},
+  { "PF15", 55,  GPIO_INTERRUPT_PIN,  12, 0, true, false, GPIO_PORTF | GPIO_PIN15 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, lbackward_speed_cb},
   
   /* right wheel motor direction control */
-  { "PC9",  99,  GPIO_OUTPUT_PIN,     11, 0, false, false, GPIO_PORTC | GPIO_PIN9  | GPIO_OUTPUT | GPIO_CNF_OUTPP, NULL},
+  { "PC9",  99,  GPIO_OUTPUT_PIN,     13, 0, false, false, GPIO_PORTC | GPIO_PIN9  | GPIO_OUTPUT | GPIO_CNF_OUTPP, NULL},
   
-  /* left wheel encode pause input */
-  //{ "PF14", 54,  GPIO_INTERRUPT_PIN,  14, 0, GPIO_PORTF | GPIO_PIN14 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, rforward_speed_cb}, 
-  //{ "PF15", 55,  GPIO_INTERRUPT_PIN,  15, 0, GPIO_PORTF | GPIO_PIN15 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, rbackward_speed_cb},
+  /* right wheel encode pause input */
+  { "PF12", 50,  GPIO_INTERRUPT_PIN,  14, 0, true, false, GPIO_PORTF | GPIO_PIN12 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, rforward_speed_cb},
+  { "PF13", 53,  GPIO_INTERRUPT_PIN,  15, 0, true, false, GPIO_PORTF | GPIO_PIN13 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, rbackward_speed_cb},
 
   /* left & right bumper pause input */
-  { "PB14", 75,  GPIO_INTERRUPT_PIN,  12, 0, true, true, GPIO_PORTB | GPIO_PIN14 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, rbumper_trigger_cb},
-  { "PB15", 76,  GPIO_INTERRUPT_PIN,  13, 0, true, true, GPIO_PORTB | GPIO_PIN15 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, lbumper_trigger_cb},
+  { "PB14", 75,  GPIO_INTERRUPT_PIN,  16, 0, true, true, GPIO_PORTB | GPIO_PIN14 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, rbumper_trigger_cb},
+  { "PB15", 76,  GPIO_INTERRUPT_PIN,  17, 0, true, true, GPIO_PORTB | GPIO_PIN15 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, lbumper_trigger_cb},
 
 };
 
@@ -72,12 +72,12 @@ GPIO_CONFIG_DES_S g_gpio_cfg_dec[] = {
 *****************************************************************************/
 void lforward_speed_cb(int param)
 {
-
+  printf("%s\n", __func__);
 }
 
 void rforward_speed_cb(int param)
 {
-
+  printf("%s\n", __func__);
 }
 
 /*****************************************************************************
@@ -95,12 +95,12 @@ void rforward_speed_cb(int param)
 *****************************************************************************/
 void lbackward_speed_cb(int param)
 {
-
+  printf("%s\n", __func__);
 }
 
 void rbackward_speed_cb(int param)
 {
-
+  printf("%s\n", __func__);
 }
 
 /*****************************************************************************
