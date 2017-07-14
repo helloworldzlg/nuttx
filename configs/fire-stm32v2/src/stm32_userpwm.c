@@ -92,8 +92,8 @@
 
 typedef enum 
 {
-	USER_TIM3_PWM = 3,
-    USER_TIM8_PWM = 8,	
+  USER_TIM3_PWM = 3,
+  USER_TIM8_PWM = 8,
 }USER_TIM_E;
 
 /************************************************************************************
@@ -123,24 +123,24 @@ int stm32_pwm_setup(void)
     {
       for (index = 0; index < pwm_dev_num; index++)
         {            
-		  /* Call stm32_pwminitialize() to get an instance of the PWM interface */
-		  pwm = stm32_pwminitialize(use_pwm[index]);
-		  if (!pwm)
-		    {
-		      aerr("ERROR: Failed to get the STM32 PWM lower half\n");
-		      return -ENODEV;
-		    }
-
-		  /* Register the PWM driver at "/dev/pwm*" */
-		  memset(dev_path, '\0', sizeof(dev_path));
-		  sprintf(dev_path, "/dev/pwm%d", index);
-		  
-		  ret = pwm_register(dev_path, pwm);
-		  if (ret < 0)
-		    {
-		      aerr("ERROR: pwm_register failed: %d\n", ret);
-		      return ret;
-		    }
+          /* Call stm32_pwminitialize() to get an instance of the PWM interface */
+          pwm = stm32_pwminitialize(use_pwm[index]);
+          if (!pwm)
+            {
+              aerr("ERROR: Failed to get the STM32 PWM lower half\n");
+              return -ENODEV;
+            }
+          
+          /* Register the PWM driver at "/dev/pwm*" */
+          memset(dev_path, '\0', sizeof(dev_path));
+          sprintf(dev_path, "/dev/pwm%d", index);
+          
+          ret = pwm_register(dev_path, pwm);
+          if (ret < 0)
+            {
+              aerr("ERROR: pwm_register failed: %d\n", ret);
+              return ret;
+            }
         }
       /* Now we are initialized */
 
