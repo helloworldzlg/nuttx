@@ -28,6 +28,18 @@ typedef struct
   void (*handle)(int);
 }GPIO_CONFIG_DES_S;
 
+typedef enum
+{
+	PC_9 = BCAS_GPIO_ID_DISTANCE,
+	PF_14,
+	PF_15,
+	PC_7,
+	PF12,
+	PF13,
+	PB14,
+	PB15,
+}USER_GPIO_ID_E;
+
 void lforward_speed_cb(int param);
 void lbackward_speed_cb(int param);
 void rforward_speed_cb(int param);
@@ -38,22 +50,22 @@ void rbumper_trigger_cb(int param);
 /* GPIO config list for bcas */
 GPIO_CONFIG_DES_S g_gpio_cfg_dec[] = {
   /* left wheel motor direction control */
-  { "PC7",  97,  GPIO_OUTPUT_PIN,     10, 0, false, false, GPIO_PORTC | GPIO_PIN7  | GPIO_OUTPUT | GPIO_CNF_OUTPP, NULL},
+  { "PC9",  99,  GPIO_OUTPUT_PIN,     PC_9, 0, false, false, GPIO_PORTC | GPIO_PIN9  | GPIO_OUTPUT | GPIO_CNF_OUTPP | GPIO_OUTPUT_CLEAR | GPIO_MODE_50MHz, NULL},
   
-  /* left wheel encode pause input */
-  { "PF14", 54,  GPIO_INTERRUPT_PIN,  11, 0, true, false, GPIO_PORTF | GPIO_PIN14 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, lforward_speed_cb},
-  { "PF15", 55,  GPIO_INTERRUPT_PIN,  12, 0, true, false, GPIO_PORTF | GPIO_PIN15 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, lbackward_speed_cb},
+  /* left wheel encode pause input */  
+  { "PF14", 54,  GPIO_INTERRUPT_PIN,  PF_14, 0, true, false, GPIO_PORTF | GPIO_PIN14 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, lforward_speed_cb},
+  { "PF15", 55,  GPIO_INTERRUPT_PIN,  PF_15, 0, true, false, GPIO_PORTF | GPIO_PIN15 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, lbackward_speed_cb},
   
   /* right wheel motor direction control */
-  { "PC9",  99,  GPIO_OUTPUT_PIN,     13, 0, false, false, GPIO_PORTC | GPIO_PIN9  | GPIO_OUTPUT | GPIO_CNF_OUTPP, NULL},
-  
+  { "PC7",  97,  GPIO_OUTPUT_PIN,     PC_7, 0, false, false, GPIO_PORTC | GPIO_PIN7  | GPIO_OUTPUT | GPIO_CNF_OUTPP | GPIO_OUTPUT_CLEAR |GPIO_MODE_50MHz, NULL},
+    
   /* right wheel encode pause input */
-  { "PF12", 50,  GPIO_INTERRUPT_PIN,  14, 0, true, false, GPIO_PORTF | GPIO_PIN12 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, rforward_speed_cb},
-  { "PF13", 53,  GPIO_INTERRUPT_PIN,  15, 0, true, false, GPIO_PORTF | GPIO_PIN13 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, rbackward_speed_cb},
+  { "PF12", 50,  GPIO_INTERRUPT_PIN,  PF12, 0, true, false, GPIO_PORTF | GPIO_PIN12 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, rforward_speed_cb},
+  { "PF13", 53,  GPIO_INTERRUPT_PIN,  PF13, 0, true, false, GPIO_PORTF | GPIO_PIN13 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, rbackward_speed_cb},
 
   /* left & right bumper pause input */
-  { "PB14", 75,  GPIO_INTERRUPT_PIN,  16, 0, true, true, GPIO_PORTB | GPIO_PIN14 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, rbumper_trigger_cb},
-  { "PB15", 76,  GPIO_INTERRUPT_PIN,  17, 0, true, true, GPIO_PORTB | GPIO_PIN15 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, lbumper_trigger_cb},
+  { "PB14", 75,  GPIO_INTERRUPT_PIN,  PB14, 0, true, true, GPIO_PORTB | GPIO_PIN14 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, rbumper_trigger_cb},
+  { "PB15", 76,  GPIO_INTERRUPT_PIN,  PB15, 0, true, true, GPIO_PORTB | GPIO_PIN15 | GPIO_INPUT  | GPIO_CNF_INPULLUP | GPIO_EXTI, lbumper_trigger_cb},
 
 };
 
@@ -72,12 +84,12 @@ GPIO_CONFIG_DES_S g_gpio_cfg_dec[] = {
 *****************************************************************************/
 void lforward_speed_cb(int param)
 {
-  printf("%s\n", __func__);
+  //printf("%s\n", __func__);
 }
 
 void rforward_speed_cb(int param)
 {
-  printf("%s\n", __func__);
+  //printf("%s\n", __func__);
 }
 
 /*****************************************************************************
@@ -95,12 +107,12 @@ void rforward_speed_cb(int param)
 *****************************************************************************/
 void lbackward_speed_cb(int param)
 {
-  printf("%s\n", __func__);
+  //printf("%s\n", __func__);
 }
 
 void rbackward_speed_cb(int param)
 {
-  printf("%s\n", __func__);
+  //printf("%s\n", __func__);
 }
 
 /*****************************************************************************
@@ -118,12 +130,12 @@ void rbackward_speed_cb(int param)
 *****************************************************************************/
 void lbumper_trigger_cb(int param)
 {
-  printf("lbumper_trigger\n");
+  //printf("lbumper_trigger\n");
 }
 
 void rbumper_trigger_cb(int param)
 {
-  printf("rbumper_trigger\n");
+  //printf("rbumper_trigger\n");
 }
 
 
